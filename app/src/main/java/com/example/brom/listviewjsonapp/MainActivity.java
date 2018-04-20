@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.BufferedReader;
@@ -27,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //new FetchData().execute();
+        new FetchData().execute();
 
         Mountain m = new Mountain("Mount","berg","Stuff");
         Mountain m2 = new Mountain("pontus","stuff2","Stuff3");
@@ -122,19 +124,14 @@ public class MainActivity extends AppCompatActivity {
 
             try {
                 // Ditt JSON-objekt som Java
-                JSONObject json1 = new JSONObject(o);
+                JSONArray json1 = new JSONArray(o);
 
-
-                /*
                 for(int i=0; i<json1.length();i++){
-                    String name = json1.getString("name");
-                    Mountain m = new Mountain(name);
-                    mountains.add(new Mountain(name));
+                    JSONObject berg = json1.getJSONObject(i);
+                    String bergNamn = berg.getString("name");
+                    String bergPlats = berg.getString("location");
+                    Log.d("pontlog",bergPlats);
                 }
-                */
-                // När vi har ett JSONObjekt kan vi hämta ut dess beståndsdelar
-                //JSONArray a = json1.getJSONArray("phoneNumber");
-                //int age = json1.getInt("age");
 
             } catch (JSONException e) {
                 Log.e("brom","E:"+e.getMessage());
