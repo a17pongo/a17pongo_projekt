@@ -21,6 +21,8 @@ public class Mountain {
         String str=name;
         str += " is located ";
         str += location;
+        str += " av typen: ";
+        str += type;
         return str;
     }
 }

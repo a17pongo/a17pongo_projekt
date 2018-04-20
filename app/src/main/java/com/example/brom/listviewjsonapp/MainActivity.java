@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,6 +21,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 // Retrieve data from Internet service using AsyncTask and the included networking code
@@ -33,13 +35,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        List<Mountain> mountains = new ArrayList<>();
         Mountain m = new Mountain("Mount","berg","plats");
+        List<Mountain> mountains = new ArrayList<Mountain>();
         mountains.add(m);
         mountains.add(new Mountain("pontus","woop","hej"));
         //new FetchData().execute();
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this, R.layout.activity_main, R.id.my_list, mountains);
+        ArrayAdapter adapter = new ArrayAdapter(MainActivity.this, R.layout.view_items, R.id.my_text, Collections.singletonList(m.info()));
 
         ListView listView = (ListView) findViewById(R.id.my_list);
         listView.setAdapter(adapter);
