@@ -17,6 +17,11 @@ public class Mountain {
         location=inLocation;
     }
 
+    @Override
+    public String toString() {
+        return name + location + type;
+    }
+
     public String info(){
         String str=name;
         str += " is located ";

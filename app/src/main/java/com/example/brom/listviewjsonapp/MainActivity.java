@@ -4,13 +4,8 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.BufferedReader;
@@ -20,27 +15,24 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 // Retrieve data from Internet service using AsyncTask and the included networking code
-
 // Parse the retrieved JSON and update the ListView adapter
-
 // Implement a "refresh" functionality using Android's menu system
 public class MainActivity extends AppCompatActivity {
+    private List<Mountain> mountains = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Mountain m = new Mountain("Mount","berg","plats");
-        Mountain m2 = new Mountain("pontus","woop","hej");
-        List<Mountain> mountains = new ArrayList<Mountain>();
+        //new FetchData().execute();
+
+        Mountain m = new Mountain("Mount","berg","Stuff");
+        Mountain m2 = new Mountain("pontus","stuff2","Stuff3");
         mountains.add(m);
         mountains.add(m2);
-        //new FetchData().execute();
 
         ArrayAdapter adapter = new ArrayAdapter(MainActivity.this, R.layout.view_items, R.id.my_text, mountains);
 
@@ -55,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
              */
-
     }
 
     private class FetchData extends AsyncTask<Void,Void,String>{
@@ -132,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 // Ditt JSON-objekt som Java
                 JSONObject json1 = new JSONObject(o);
+
 
                 /*
                 for(int i=0; i<json1.length();i++){
