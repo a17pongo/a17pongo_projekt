@@ -19,8 +19,10 @@ public class Mountain {
 
     @Override
     public String toString() {
-        return name + location + type;
+        return name;
     }
+
+
 
     public String info(){
         String str=name;

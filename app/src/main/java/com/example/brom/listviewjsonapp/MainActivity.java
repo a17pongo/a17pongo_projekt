@@ -4,8 +4,11 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,25 +35,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         new FetchData().execute();
 
-        Mountain m = new Mountain("Mount","berg","Stuff");
-        Mountain m2 = new Mountain("pontus","stuff2","Stuff3");
-        mountains.add(m);
-        mountains.add(m2);
-
-       adapter = new ArrayAdapter(MainActivity.this, R.layout.view_items, R.id.my_text, mountains);
-
+        adapter = new ArrayAdapter(MainActivity.this, R.layout.view_items, R.id.my_text, mountains);
 
         ListView listView = (ListView) findViewById(R.id.my_list);
         listView.setAdapter(adapter);
 
-            /*
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                }
-            });
-             */
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Mountain testing = new Mountain.getPosition(position);
+                    Toast.makeText(MainActivity.this, testing.info(), Toast.LENGTH_SHORT).show();
+                }});
     }
 
     private class FetchData extends AsyncTask<Void,Void,String>{
@@ -117,15 +112,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String o) {
             super.onPostExecute(o);
-            // This code executes after we have received our data. The String object o holds
-            // the un-parsed JSON string or is null if we had an IOException during the fetch.
-
-            // Implement a parsing code that loops through the entire JSON and creates objects
-            // of our newly created Mountain class.
-            // Notera att alla " inne i JSON-objektet måste föregås av ett backslash '\'
 
             try {
-                // Ditt JSON-objekt som Java
                 JSONArray json1 = new JSONArray(o);
                 adapter.clear();
                 for(int i=0; i<json1.length();i++){
@@ -137,7 +125,6 @@ public class MainActivity extends AppCompatActivity {
                     adapter.add(test);
                     Log.d("pontlog",bergPlats);
                 }
-
             } catch (JSONException e) {
                 Log.e("brom","E:"+e.getMessage());
             }
