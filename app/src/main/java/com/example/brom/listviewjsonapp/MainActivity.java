@@ -36,12 +36,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Mountain m = new Mountain("Mount","berg","plats");
+        Mountain m2 = new Mountain("pontus","woop","hej");
         List<Mountain> mountains = new ArrayList<Mountain>();
         mountains.add(m);
-        mountains.add(new Mountain("pontus","woop","hej"));
+        mountains.add(m2);
         //new FetchData().execute();
 
-        ArrayAdapter adapter = new ArrayAdapter(MainActivity.this, R.layout.view_items, R.id.my_text, Collections.singletonList(m.info()));
+        ArrayAdapter adapter = new ArrayAdapter(MainActivity.this, R.layout.view_items, R.id.my_text, mountains);
 
         ListView listView = (ListView) findViewById(R.id.my_list);
         listView.setAdapter(adapter);
