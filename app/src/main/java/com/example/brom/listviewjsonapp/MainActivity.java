@@ -22,32 +22,27 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
-// Create a new class, Mountain, that can hold your JSON data
-
-// Create a ListView as in "Assignment 1 - Toast and ListView"
-
 // Retrieve data from Internet service using AsyncTask and the included networking code
 
 // Parse the retrieved JSON and update the ListView adapter
 
 // Implement a "refresh" functionality using Android's menu system
-
-
 public class MainActivity extends AppCompatActivity {
-    List<Mountain> mountains = new ArrayList<Mountain>();
-
-// Create ArrayLists from the raw data above and use these lists when populating your ListView.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        new FetchData().execute();
+        List<Mountain> mountains = new ArrayList<>();
+        Mountain m = new Mountain("Mount","berg","plats");
+        mountains.add(m);
+        mountains.add(new Mountain("pontus","woop","hej"));
+        //new FetchData().execute();
 
-        ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(),R.layout.activity_main,R.id.my_list,mountains);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this, R.layout.activity_main, R.id.my_list, mountains);
 
         ListView listView = (ListView) findViewById(R.id.my_list);
+        listView.setAdapter(adapter);
 
             /*
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -57,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
              */
-        listView.setAdapter(adapter);
+
     }
 
     private class FetchData extends AsyncTask<Void,Void,String>{
@@ -134,11 +129,6 @@ public class MainActivity extends AppCompatActivity {
             try {
                 // Ditt JSON-objekt som Java
                 JSONObject json1 = new JSONObject(o);
-
-                for(int i=0;i<json1.length();i++){
-                    JSONArray a = json1.getJSONArray();
-                }
-
 
                 /*
                 for(int i=0; i<json1.length();i++){
