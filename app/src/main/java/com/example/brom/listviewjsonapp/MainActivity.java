@@ -24,6 +24,7 @@ import java.util.List;
 // Implement a "refresh" functionality using Android's menu system
 public class MainActivity extends AppCompatActivity {
     private List<Mountain> mountains = new ArrayList<>();
+    private ArrayAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +37,8 @@ public class MainActivity extends AppCompatActivity {
         mountains.add(m);
         mountains.add(m2);
 
-        ArrayAdapter adapter = new ArrayAdapter(MainActivity.this, R.layout.view_items, R.id.my_text, mountains);
+       adapter = new ArrayAdapter(MainActivity.this, R.layout.view_items, R.id.my_text, mountains);
+
 
         ListView listView = (ListView) findViewById(R.id.my_list);
         listView.setAdapter(adapter);
@@ -125,11 +127,14 @@ public class MainActivity extends AppCompatActivity {
             try {
                 // Ditt JSON-objekt som Java
                 JSONArray json1 = new JSONArray(o);
-
+                adapter.clear();
                 for(int i=0; i<json1.length();i++){
                     JSONObject berg = json1.getJSONObject(i);
                     String bergNamn = berg.getString("name");
                     String bergPlats = berg.getString("location");
+                    String bergTyp = berg.getString("type");
+                    Mountain test = new Mountain(bergNamn,bergPlats,bergTyp);
+                    adapter.add(test);
                     Log.d("pontlog",bergPlats);
                 }
 
