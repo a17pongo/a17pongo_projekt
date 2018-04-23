@@ -41,11 +41,11 @@ public class MainActivity extends AppCompatActivity {
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Mountain testing = new Mountain.getPosition(position);
-                    Toast.makeText(MainActivity.this, testing.info(), Toast.LENGTH_SHORT).show();
-                }});
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Mountain m = mountains.get(position);
+                Toast.makeText(MainActivity.this,m.info(),Toast.LENGTH_SHORT).show();
+            }});
     }
 
     private class FetchData extends AsyncTask<Void,Void,String>{
@@ -119,11 +119,16 @@ public class MainActivity extends AppCompatActivity {
                 for(int i=0; i<json1.length();i++){
                     JSONObject berg = json1.getJSONObject(i);
                     String bergNamn = berg.getString("name");
-                    String bergPlats = berg.getString("location");
                     String bergTyp = berg.getString("type");
-                    Mountain test = new Mountain(bergNamn,bergPlats,bergTyp);
+                    String bergPlats = berg.getString("location");
+                    String bergComp = berg.getString("company");
+                    int bergId = berg.getInt("ID");
+                    String bergCategory = berg.getString("category");
+                    int bergSize = berg.getInt("size");
+                    int bergCost = berg.getInt("cost");
+                    //String bergAux = berg.getString("auxdata");
+                    Mountain test = new Mountain(bergNamn,bergTyp,bergPlats,bergId,bergComp,bergCategory,bergSize,bergCost);
                     adapter.add(test);
-                    Log.d("pontlog",bergPlats);
                 }
             } catch (JSONException e) {
                 Log.e("brom","E:"+e.getMessage());
