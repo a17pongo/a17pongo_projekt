@@ -40,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
 
         adapter = new ArrayAdapter(MainActivity.this, R.layout.view_items, R.id.my_text, mountains);
 
+
+
         ListView listView = (ListView) findViewById(R.id.my_list);
         listView.setAdapter(adapter);
 
@@ -149,7 +151,11 @@ public class MainActivity extends AppCompatActivity {
                     String bergCategory = berg.getString("category");
                     int bergSize = berg.getInt("size");
                     int bergCost = berg.getInt("cost");
-                    //String bergAux = berg.getString("auxdata");
+                    JSONObject bergAux = new JSONObject(berg.getString("auxdata"));
+                    String bergImg = bergAux.getString("img");
+                    String bergUrl = bergAux.getString("url");
+                    Log.d("url:" , bergImg);
+                    Log.d("url", bergUrl);
                     Mountain test = new Mountain(bergNamn,bergTyp,bergPlats,bergId,bergComp,bergCategory,bergSize,bergCost);
                     adapter.add(test);
                 }
