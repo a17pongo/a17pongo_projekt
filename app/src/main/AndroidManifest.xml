@@ -19,7 +19,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".MountainDetails"
+            android:label="@string/title_mountain_details"
             android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"
             >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

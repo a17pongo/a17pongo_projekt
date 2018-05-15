@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private List<Mountain> mountains = new ArrayList<>();
+    private List<Mountain> mountains = new ArrayList<Mountain>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,17 +41,14 @@ public class MainActivity extends AppCompatActivity {
         new FetchData().execute();
 
         //RecyclerView
-        mRecyclerView.setHasFixedSize(true);
-
         mRecyclerView = (RecyclerView) findViewById(R.id.my_list);
+        mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
 
         mAdapter = new CustomAdapter(mountains, new CustomAdapter.OnItemClickListener() {
             @Override public void onItemClick(Mountain item) {
                 Intent intent = new Intent(getApplicationContext(), MountainDetails.class);
-                //Toast.makeText(getApplicationContext(), item.info(), Toast.LENGTH_LONG).show();
 
                 String nameInfo = item.nameInfo();
                 String locationInfo = item.locationInfo();
@@ -71,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.my_menu, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override

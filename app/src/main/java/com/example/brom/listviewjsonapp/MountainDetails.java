@@ -15,8 +15,6 @@ import java.io.InputStream;
 public class MountainDetails extends AppCompatActivity {
     protected ImageView bmImage;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,13 +33,10 @@ public class MountainDetails extends AppCompatActivity {
         textView2.setText(mountainLocation);
         textView3.setText(mountainHeight);
 
-        new DownloadImageTask((ImageView) findViewById(R.id.mountain_image))
-                .execute(imageUrl);
+        new DownloadImageTask((ImageView) findViewById(R.id.mountain_image)).execute(imageUrl);
     }
 
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-
-
         public DownloadImageTask(ImageView bmImageIn) {
             bmImage = bmImageIn;
         }
