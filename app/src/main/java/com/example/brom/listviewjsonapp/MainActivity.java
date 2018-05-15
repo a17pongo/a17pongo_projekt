@@ -1,8 +1,11 @@
 package com.example.brom.listviewjsonapp;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,12 +28,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-// Retrieve data from Internet service using AsyncTask and the included networking code
-// Parse the retrieved JSON and update the ListView adapter
-// Implement a "refresh" functionality using Android's my_menu system
 public class MainActivity extends AppCompatActivity {
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
     private List<Mountain> mountains = new ArrayList<>();
-    private ArrayAdapter adapter;
+
+    //private ArrayAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,19 +42,34 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         new FetchData().execute();
 
-        adapter = new ArrayAdapter(MainActivity.this, R.layout.view_items, R.id.my_text, mountains);
+        //RecyclerView
+        mRecyclerView.setHasFixedSize(true);
 
+        mRecyclerView = (RecyclerView) findViewById(R.id.my_list);
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
 
+        //ListView listView = (ListView) findViewById(R.id.my_list);
+        //listView.setAdapter(adapter);
 
-        ListView listView = (ListView) findViewById(R.id.my_list);
-        listView.setAdapter(adapter);
+        mAdapter = new CustomAdapter(mountains, new CustomAdapter.OnItemClickListener() {
+            @Override public void onItemClick(Mountain item) {
+                Intent intent = new Intent(getApplicationContext(), MountainDetails.class);
+                //Toast.makeText(getApplicationContext(), item.info(), Toast.LENGTH_LONG).show();
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Mountain m = mountains.get(position);
-                Toast.makeText(MainActivity.this,m.info(),Toast.LENGTH_SHORT).show();
-            }});
+                String nameInfo = item.nameInfo();
+                String locationInfo = item.locationInfo();
+                String heightInfo = item.heightInfo();
+                intent.putExtra("Name", nameInfo);
+                intent.putExtra("Location", locationInfo);
+                intent.putExtra("Height", heightInfo);
+                intent.putExtra("Image", item.imageUrl());
+                startActivity(intent);
+            }
+        });
+
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
@@ -65,7 +84,23 @@ public class MainActivity extends AppCompatActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.refresh:
-                adapter.clear();
+                mRecyclerView.setAdapter(null);
+                mountains.clear();
+                mRecyclerView.setAdapter(new CustomAdapter(mountains, new CustomAdapter.OnItemClickListener() {
+                    @Override public void onItemClick(Mountain item) {
+                        Intent intent = new Intent(getApplicationContext(), MountainDetails.class);
+                        //Toast.makeText(getApplicationContext(), item.info(), Toast.LENGTH_LONG).show();
+
+                        String nameInfo = item.nameInfo();
+                        String locationInfo = item.locationInfo();
+                        String heightInfo = item.heightInfo();
+                        intent.putExtra("Name", nameInfo);
+                        intent.putExtra("Location", locationInfo);
+                        intent.putExtra("Height", heightInfo);
+                        intent.putExtra("Image", item.imageUrl());
+                        startActivity(intent);
+                    }
+                }));
                 new FetchData().execute();
                 return true;
             default:
@@ -140,7 +175,8 @@ public class MainActivity extends AppCompatActivity {
 
             try {
                 JSONArray json1 = new JSONArray(o);
-                adapter.clear();
+                mRecyclerView.setAdapter(null);
+                mountains.clear();
                 for(int i=0; i<json1.length();i++){
                     JSONObject berg = json1.getJSONObject(i);
                     String bergNamn = berg.getString("name");
@@ -154,10 +190,24 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject bergAux = new JSONObject(berg.getString("auxdata"));
                     String bergImg = bergAux.getString("img");
                     String bergUrl = bergAux.getString("url");
-                    Log.d("url:" , bergImg);
-                    Log.d("url", bergUrl);
-                    Mountain test = new Mountain(bergNamn,bergTyp,bergPlats,bergId,bergComp,bergCategory,bergSize,bergCost);
-                    adapter.add(test);
+
+                    Mountain m = new Mountain(bergNamn,bergTyp,bergPlats,bergId,bergComp,bergCategory,bergSize,bergCost,bergImg,bergUrl);
+                    mountains.add(m);
+                    mRecyclerView.setAdapter(new CustomAdapter(mountains, new CustomAdapter.OnItemClickListener() {
+                        @Override public void onItemClick(Mountain item) {
+                            Intent intent = new Intent(getApplicationContext(), MountainDetails.class);
+                            //Toast.makeText(getApplicationContext(), item.info(), Toast.LENGTH_LONG).show();
+
+                            String nameInfo = item.nameInfo();
+                            String locationInfo = item.locationInfo();
+                            String heightInfo = item.heightInfo();
+                            intent.putExtra("Name", nameInfo);
+                            intent.putExtra("Location", locationInfo);
+                            intent.putExtra("Height", heightInfo);
+                            intent.putExtra("Image", item.imageUrl());
+                            startActivity(intent);
+                        }
+                    }));
                 }
             } catch (JSONException e) {
                 Log.e("brom","E:"+e.getMessage());

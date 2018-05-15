@@ -9,9 +9,10 @@ public class Mountain {
     private String category;
     private int size;
     private int cost;
-    //private String auxData;
+    private String imgUrl;
+    private String infoUrl;
 
-    public Mountain(String inName, String inType,String inLocation, int inId, String inCompany,String inCategory,int inSize,int inCost){
+    public Mountain(String inName, String inType,String inLocation, int inId, String inCompany,String inCategory,int inSize,int inCost, String inImgurl, String inInfoUrl){
         id=inId;
         name=inName;
         type=inType;
@@ -20,7 +21,8 @@ public class Mountain {
         category=inCategory;
         size=inSize;
         cost=inCost;
-        //auxData=inAuxdata;
+        imgUrl=inImgurl;
+        infoUrl=inInfoUrl;
     }
 
     @Override
@@ -37,5 +39,21 @@ public class Mountain {
         str += "\n" +"Location: ";
         str += location;
         return str;
+    }
+
+    public String nameInfo() {
+        return name;
+    }
+
+    public String locationInfo() {
+        return location;
+    }
+
+    public String heightInfo() {
+        return "" + Integer.toString(size) + " m";
+    }
+
+    public String imageUrl() {
+        return imgUrl;
     }
 }
