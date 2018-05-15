@@ -37,7 +37,6 @@ public class MountainDetails extends AppCompatActivity {
 
         new DownloadImageTask((ImageView) findViewById(R.id.mountain_image))
                 .execute(imageUrl);
-        Log.d("olle1", imageUrl);
     }
 
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {

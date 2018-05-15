@@ -14,7 +14,7 @@ import java.util.List;
 
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
 
-    private List<Mountain> mDataset;
+    public List<Mountain> mDataset;
     private OnItemClickListener mOnItemClickListener;
 
     public interface OnItemClickListener {
@@ -82,7 +82,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
     public void clear () {
         mDataset.clear();
-        //notifyItemChanged()
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -90,6 +89,5 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     public int getItemCount() {
         return mDataset.size();
     }
-
 }
 

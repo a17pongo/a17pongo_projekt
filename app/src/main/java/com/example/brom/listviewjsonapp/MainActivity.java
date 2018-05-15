@@ -34,8 +34,6 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     private List<Mountain> mountains = new ArrayList<>();
 
-    //private ArrayAdapter adapter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,9 +47,6 @@ public class MainActivity extends AppCompatActivity {
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
-
-        //ListView listView = (ListView) findViewById(R.id.my_list);
-        //listView.setAdapter(adapter);
 
         mAdapter = new CustomAdapter(mountains, new CustomAdapter.OnItemClickListener() {
             @Override public void onItemClick(Mountain item) {
@@ -196,7 +191,6 @@ public class MainActivity extends AppCompatActivity {
                     mRecyclerView.setAdapter(new CustomAdapter(mountains, new CustomAdapter.OnItemClickListener() {
                         @Override public void onItemClick(Mountain item) {
                             Intent intent = new Intent(getApplicationContext(), MountainDetails.class);
-                            //Toast.makeText(getApplicationContext(), item.info(), Toast.LENGTH_LONG).show();
 
                             String nameInfo = item.nameInfo();
                             String locationInfo = item.locationInfo();
