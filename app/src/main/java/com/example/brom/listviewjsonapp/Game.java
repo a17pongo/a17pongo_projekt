@@ -1,9 +1,9 @@
 package com.example.brom.listviewjsonapp;
 
-public class Mountain {
+public class Game {
     private int id;
     private String name;
-    private String type;
+    //private String type;
     private String company;
     private String location;
     private String category;
@@ -12,17 +12,17 @@ public class Mountain {
     private String imgUrl;
     private String infoUrl;
 
-    public Mountain(String inName, String inType,String inLocation, int inId, String inCompany,String inCategory,int inSize,int inCost, String inImgurl, String inInfoUrl){
+    public Game(String inName,  int inId, String inCompany, String inCategory, int inSize){
         id=inId;
         name=inName;
-        type=inType;
+        //type=inType;
         company=inCompany;
-        location=inLocation;
+        //location=inLocation;
         category=inCategory;
         size=inSize;
-        cost=inCost;
-        imgUrl=inImgurl;
-        infoUrl=inInfoUrl;
+        //cost=inCost;
+        //imgUrl=inImgurl;
+        //infoUrl=inInfoUrl;
     }
 
     @Override
@@ -35,9 +35,6 @@ public class Mountain {
     public String info(){
         String str= "Name: " + name;
         str += "\n" + "Id: " + id;
-        str += "\n" + "Type: " + type;
-        str += "\n" +"Location: ";
-        str += location;
         return str;
     }
 
@@ -50,7 +47,7 @@ public class Mountain {
     }
 
     public String heightInfo() {
-        return "" + Integer.toString(size) + " m";
+        return "" + Integer.toString(size) + " GB";
     }
 
     public String imageUrl() {

@@ -2,6 +2,8 @@ package com.example.brom.listviewjsonapp;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,9 +13,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -32,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private List<Mountain> mountains = new ArrayList<Mountain>();
+    private List<Game> games = new ArrayList<Game>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +45,9 @@ public class MainActivity extends AppCompatActivity {
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new CustomAdapter(mountains, new CustomAdapter.OnItemClickListener() {
-            @Override public void onItemClick(Mountain item) {
-                Intent intent = new Intent(getApplicationContext(), MountainDetails.class);
+        mAdapter = new CustomAdapter(games, new CustomAdapter.OnItemClickListener() {
+            @Override public void onItemClick(Game item) {
+                Intent intent = new Intent(getApplicationContext(), GameDetails.class);
 
                 String nameInfo = item.nameInfo();
                 String locationInfo = item.locationInfo();
@@ -75,19 +74,19 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
+            case R.id.about:
+                Toast.makeText(getApplicationContext(),"An app for everybody that play computer games and want to know if the game will fit on their computer",Toast.LENGTH_LONG).show();
+                return true;
             case R.id.refresh:
                 mRecyclerView.setAdapter(null);
-                mountains.clear();
-                mRecyclerView.setAdapter(new CustomAdapter(mountains, new CustomAdapter.OnItemClickListener() {
-                    @Override public void onItemClick(Mountain item) {
-                        Intent intent = new Intent(getApplicationContext(), MountainDetails.class);
-                        //Toast.makeText(getApplicationContext(), item.info(), Toast.LENGTH_LONG).show();
+                games.clear();
+                mRecyclerView.setAdapter(new CustomAdapter(games, new CustomAdapter.OnItemClickListener() {
+                    @Override public void onItemClick(Game item) {
+                        Intent intent = new Intent(getApplicationContext(), GameDetails.class);
 
                         String nameInfo = item.nameInfo();
-                        String locationInfo = item.locationInfo();
                         String heightInfo = item.heightInfo();
                         intent.putExtra("Name", nameInfo);
-                        intent.putExtra("Location", locationInfo);
                         intent.putExtra("Height", heightInfo);
                         intent.putExtra("Image", item.imageUrl());
                         startActivity(intent);
@@ -113,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
 
             try {
                 // Construct the URL for the Internet service
-                URL url = new URL("http://wwwlab.iit.his.se/brom/kurser/mobilprog/dbservice/admin/getdataasjson.php?type=brom");
+                URL url = new URL("http://wwwlab.iit.his.se/brom/kurser/mobilprog/dbservice/admin/getdataasjson.php?type=a17pongo");
 
                 // Create the request to the PHP-service, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -168,26 +167,24 @@ public class MainActivity extends AppCompatActivity {
             try {
                 JSONArray json1 = new JSONArray(o);
                 mRecyclerView.setAdapter(null);
-                mountains.clear();
+                games.clear();
                 for(int i=0; i<json1.length();i++){
                     JSONObject berg = json1.getJSONObject(i);
                     String bergNamn = berg.getString("name");
-                    String bergTyp = berg.getString("type");
-                    String bergPlats = berg.getString("location");
                     String bergComp = berg.getString("company");
                     int bergId = berg.getInt("ID");
                     String bergCategory = berg.getString("category");
                     int bergSize = berg.getInt("size");
-                    int bergCost = berg.getInt("cost");
-                    JSONObject bergAux = new JSONObject(berg.getString("auxdata"));
-                    String bergImg = bergAux.getString("img");
-                    String bergUrl = bergAux.getString("url");
+                    //int bergCost = berg.getInt("cost");
+                    //JSONObject bergAux = new JSONObject(berg.getString("auxdata"));
+                    //String bergImg = bergAux.getString("img");
+                    //String bergUrl = bergAux.getString("url");
 
-                    Mountain m = new Mountain(bergNamn,bergTyp,bergPlats,bergId,bergComp,bergCategory,bergSize,bergCost,bergImg,bergUrl);
-                    mountains.add(m);
-                    mRecyclerView.setAdapter(new CustomAdapter(mountains, new CustomAdapter.OnItemClickListener() {
-                        @Override public void onItemClick(Mountain item) {
-                            Intent intent = new Intent(getApplicationContext(), MountainDetails.class);
+                    Game m = new Game(bergNamn,bergId,bergComp,bergCategory,bergSize);
+                    games.add(m);
+                    mRecyclerView.setAdapter(new CustomAdapter(games, new CustomAdapter.OnItemClickListener() {
+                        @Override public void onItemClick(Game item) {
+                            Intent intent = new Intent(getApplicationContext(), GameDetails.class);
 
                             String nameInfo = item.nameInfo();
                             String locationInfo = item.locationInfo();
@@ -201,9 +198,8 @@ public class MainActivity extends AppCompatActivity {
                     }));
                 }
             } catch (JSONException e) {
-                Log.e("brom","E:"+e.getMessage());
+                Log.e("a17pongo","E:"+e.getMessage());
             }
         }
     }
 }
-

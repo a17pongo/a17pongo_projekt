@@ -12,26 +12,26 @@ import android.widget.TextView;
 
 import java.io.InputStream;
 
-public class MountainDetails extends AppCompatActivity {
+public class GameDetails extends AppCompatActivity {
     protected ImageView bmImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mountain_details);
+        setContentView(R.layout.activity_game_details);
 
         Intent intent = getIntent();
-        String mountainName = intent.getStringExtra("Name");
-        String mountainLocation = intent.getStringExtra("Location");
-        String mountainHeight = intent.getStringExtra("Height");
+        String gameName = intent.getStringExtra("Name");
+        String gameSeize = intent.getStringExtra("Height");
+        String gameDesc = intent.getStringExtra("Desc");
         String imageUrl = intent.getStringExtra("Image");
 
         TextView textView1 = (TextView) findViewById(R.id.textview1);
         TextView textView2 = (TextView) findViewById(R.id.textview2);
         TextView textView3 = (TextView) findViewById(R.id.textview3);
-        textView1.setText(mountainName);
-        textView2.setText(mountainLocation);
-        textView3.setText(mountainHeight);
+        textView1.setText(gameName);
+        textView2.setText(gameSeize);
+        textView3.setText(gameDesc);
 
         new DownloadImageTask((ImageView) findViewById(R.id.mountain_image)).execute(imageUrl);
     }

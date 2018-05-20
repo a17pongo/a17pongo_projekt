@@ -14,11 +14,11 @@ import java.util.List;
 
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
 
-    public List<Mountain> mDataset;
+    public List<Game> mDataset;
     private OnItemClickListener mOnItemClickListener;
 
     public interface OnItemClickListener {
-        void onItemClick(Mountain item);
+        void onItemClick(Game item);
     }
 
     private final OnItemClickListener listener;
@@ -34,17 +34,15 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         // each data item is just a string in this case
         public TextView mTextView;
         public TextView mTextView2;
-        public TextView mTextView3;
         public ViewHolder(View v) {
             super(v);
             mTextView = v.findViewById(R.id.text1);
             mTextView2 = v.findViewById(R.id.text2);
-            mTextView3 = v.findViewById(R.id.text3);
         }
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public CustomAdapter(List<Mountain> myDataset, OnItemClickListener inListener) {
+    public CustomAdapter(List<Game> myDataset, OnItemClickListener inListener) {
         mDataset = myDataset;
         listener = inListener;
     }
@@ -67,8 +65,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.mTextView.setText(mDataset.get(position).toString());
-        holder.mTextView2.setText(mDataset.get(position).locationInfo());
-        holder.mTextView3.setText(mDataset.get(position).heightInfo());
+        holder.mTextView2.setText(mDataset.get(position).heightInfo());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,7 +73,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             }
         });
     }
-    public void add(Mountain m) {
+    public void add(Game m) {
         mDataset.add(m);
     }
 

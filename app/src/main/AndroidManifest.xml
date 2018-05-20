@@ -18,7 +18,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MountainDetails"
+        <activity android:name=".GameDetails"
             android:label="@string/title_mountain_details"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar"
