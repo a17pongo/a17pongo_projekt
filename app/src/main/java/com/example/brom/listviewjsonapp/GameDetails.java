@@ -23,16 +23,13 @@ public class GameDetails extends AppCompatActivity {
         String gameName = intent.getStringExtra("Name");
         String gameCompany = intent.getStringExtra("Company");
         String gameCategory = intent.getStringExtra("Category");
-        String gameDesc = intent.getStringExtra("Desc");
 
         TextView textView1 = (TextView) findViewById(R.id.textview1);
         TextView textView2 = (TextView) findViewById(R.id.textview2);
         TextView textView3 = (TextView) findViewById(R.id.textview3);
-        TextView textView4 = (TextView) findViewById(R.id.textview4);
         textView1.setText(gameName);
         textView2.setText(gameCompany);
         textView3.setText(gameCategory);
-        textView4.setText(gameDesc);
 
     }
 }

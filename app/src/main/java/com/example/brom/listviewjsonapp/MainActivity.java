@@ -40,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
     SQLiteDatabase dbW;
     MountainReaderDbHelper mDbHelper;
 
+    private boolean sortSize = false;
+    private boolean sortNameDesc = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,17 +62,17 @@ public class MainActivity extends AppCompatActivity {
                 String gameNameInfo = item.nameInfo();
                 String gameCompanyInfo = item.companyInfo();
                 String gameCategoryinfo = item.categoryInfo();
-                String gameDescInfo = item.gameDescInfo();
+                //String gameDescInfo = item.gameDescInfo();
                 intent.putExtra("Name", gameNameInfo);
                 intent.putExtra("Company", gameCompanyInfo);
                 intent.putExtra("Category", gameCategoryinfo);
-                intent.putExtra("Desc", gameDescInfo);
+                //intent.putExtra("Desc", gameDescInfo);
                 startActivity(intent);
             }
         }));
         mRecyclerView.setAdapter(mAdapter);
         mDbHelper = new MountainReaderDbHelper(getApplicationContext());
-        Log.d("list",games.toString());
+        //Log.d("list",games.toString());
     }
 
     @Override
@@ -84,7 +87,9 @@ public class MainActivity extends AppCompatActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.about:
-                Toast.makeText(getApplicationContext(),"An app for everybody that play computer games and want to know if the game will fit on their computer",Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),
+                        "An app for everybody that play computer games and want to know if the game will fit on their computer" + "\n"  + "made by: Pontus Göth"
+                        ,Toast.LENGTH_LONG).show();
                 return true;
             case R.id.refresh:
                 mRecyclerView.setAdapter(null);
@@ -96,15 +101,25 @@ public class MainActivity extends AppCompatActivity {
                         String gameNameInfo = item.nameInfo();
                         String gameCompanyInfo = item.companyInfo();
                         String gameCategoryinfo = item.categoryInfo();
-                        String gameDescInfo = item.gameDescInfo();
+                        //String gameDescInfo = item.gameDescInfo();
                         intent.putExtra("Name", gameNameInfo);
                         intent.putExtra("Company", gameCompanyInfo);
                         intent.putExtra("Category", gameCategoryinfo);
-                        intent.putExtra("Desc", gameDescInfo);
+                        //intent.putExtra("Desc", gameDescInfo);
                         startActivity(intent);
                     }
                 }));
                 new FetchData().execute();
+                return true;
+            case R.id.Sort_size:
+                sortNameDesc = false;
+                sortSize = true;
+                readDB();
+                return true;
+            case R.id.sort_name_desc:
+                sortNameDesc = true;
+                sortSize = false;
+                readDB();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -178,9 +193,10 @@ public class MainActivity extends AppCompatActivity {
 
             try {
                 JSONArray json1 = new JSONArray(o);
+                games.clear();
                 dbW = mDbHelper.getWritableDatabase();
                 mRecyclerView.setAdapter(null);
-                games.clear();
+
                 for(int i=0; i<json1.length();i++){
                     JSONObject game = json1.getJSONObject(i);
                     String gameNamn = game.getString("name");
@@ -197,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
                     values.put(MountainReaderContract.MountainEntry.COLUMN_NAME_SIZE,gameSize);
                     //values.put(MountainReaderContract.MountainEntry.COLUMN_NAME_DESC,gameDesc);
 
-                    dbW.insert(MountainReaderContract.MountainEntry.TABLE_NAME, null, values);
+                    dbW.insertWithOnConflict(MountainReaderContract.MountainEntry.TABLE_NAME, null, values,SQLiteDatabase.CONFLICT_IGNORE);
 
                     mRecyclerView.setAdapter(new CustomAdapter(games, new CustomAdapter.OnItemClickListener() {
                         @Override public void onItemClick(Game item) {
@@ -206,14 +222,15 @@ public class MainActivity extends AppCompatActivity {
                             String gameNameInfo = item.nameInfo();
                             String gameCompanyInfo = item.companyInfo();
                             String gameCategoryinfo = item.categoryInfo();
-                            String gameDescInfo = item.gameDescInfo();
+                            //String gameDescInfo = item.gameDescInfo();
                             intent.putExtra("Name", gameNameInfo);
                             intent.putExtra("Company", gameCompanyInfo);
                             intent.putExtra("Category", gameCategoryinfo);
-                            intent.putExtra("Desc", gameDescInfo);
+                            //intent.putExtra("Desc", gameDescInfo);
                             startActivity(intent);
                         }
                     }));
+                    //Log.d("aux",gameDesc);
                 }
                 readDB();
             } catch (JSONException e) {
@@ -222,7 +239,27 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+
     public void readDB(){
+
+        mRecyclerView.setAdapter(null);
+        games.clear();
+        mRecyclerView.setAdapter(new CustomAdapter(games, new CustomAdapter.OnItemClickListener() {
+            @Override public void onItemClick(Game item) {
+                Intent intent = new Intent(getApplicationContext(), GameDetails.class);
+
+                String gameNameInfo = item.nameInfo();
+                String gameCompanyInfo = item.companyInfo();
+                String gameCategoryinfo = item.categoryInfo();
+                //String gameDescInfo = item.gameDescInfo();
+                intent.putExtra("Name", gameNameInfo);
+                intent.putExtra("Company", gameCompanyInfo);
+                intent.putExtra("Category", gameCategoryinfo);
+                //intent.putExtra("Desc", gameDescInfo);
+                startActivity(intent);
+            }
+        }));
 
         dbR = mDbHelper.getReadableDatabase();
 
@@ -235,7 +272,13 @@ public class MainActivity extends AppCompatActivity {
                 //MountainReaderContract.MountainEntry.COLUMN_NAME_DESC
         };
 
-        String sortOrder = MountainReaderContract.MountainEntry.COLUMN_NAME_NAME  + " DESC";
+        String sortOrder = MountainReaderContract.MountainEntry.COLUMN_NAME_NAME  + " ASC";
+
+        if(sortNameDesc){
+            sortOrder = MountainReaderContract.MountainEntry.COLUMN_NAME_NAME  + " DESC";
+        }else if(sortSize){
+            sortOrder = MountainReaderContract.MountainEntry.COLUMN_NAME_SIZE  + " ASC";
+        }
 
         Cursor cursor = dbR.query(
                 MountainReaderContract.MountainEntry.TABLE_NAME,   // The table to query
@@ -256,7 +299,6 @@ public class MainActivity extends AppCompatActivity {
 
             Game gm = new Game(gameNamn,gameCompany,gameCategory,gameSize);
             games.add(gm);
-            Log.d("db",gm.info());
         }
         cursor.close();
     }

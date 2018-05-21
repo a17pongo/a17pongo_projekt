@@ -4,4 +4,8 @@
         android:title="About" />
     <item android:id="@+id/refresh"
         android:title="Refresh" />
+    <item android:id="@+id/Sort_size"
+        android:title="Sort Size" />
+    <item android:id="@+id/sort_name_desc"
+        android:title="Sort name descending" />
 </menu>

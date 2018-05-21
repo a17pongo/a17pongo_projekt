@@ -5,7 +5,7 @@ public class Game {
     private String company;
     private String category;
     private int size;
-    private String auxdata;
+    //private String auxdata;
 
 
     public Game(String inName, String inCompany, String inCategory, int inSize){
@@ -35,18 +35,18 @@ public class Game {
     }
 
     public String companyInfo() {
-        return company;
+        return "Company: " + company;
     }
 
     public String categoryInfo() {
-        return category;
+        return "Category: " + category;
     }
 
     public String sizeInfo() {
         return "" + Integer.toString(size) + " GB";
     }
 
-    public String gameDescInfo() {
+    /*public String gameDescInfo() {
         return auxdata;
-    }
+    }*/
 }
