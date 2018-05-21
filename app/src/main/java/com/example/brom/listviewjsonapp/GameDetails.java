@@ -13,7 +13,6 @@ import android.widget.TextView;
 import java.io.InputStream;
 
 public class GameDetails extends AppCompatActivity {
-    protected ImageView bmImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,40 +21,18 @@ public class GameDetails extends AppCompatActivity {
 
         Intent intent = getIntent();
         String gameName = intent.getStringExtra("Name");
-        String gameSeize = intent.getStringExtra("Height");
+        String gameCompany = intent.getStringExtra("Company");
+        String gameCategory = intent.getStringExtra("Category");
         String gameDesc = intent.getStringExtra("Desc");
-        String imageUrl = intent.getStringExtra("Image");
 
         TextView textView1 = (TextView) findViewById(R.id.textview1);
         TextView textView2 = (TextView) findViewById(R.id.textview2);
         TextView textView3 = (TextView) findViewById(R.id.textview3);
+        TextView textView4 = (TextView) findViewById(R.id.textview4);
         textView1.setText(gameName);
-        textView2.setText(gameSeize);
-        textView3.setText(gameDesc);
+        textView2.setText(gameCompany);
+        textView3.setText(gameCategory);
+        textView4.setText(gameDesc);
 
-        new DownloadImageTask((ImageView) findViewById(R.id.mountain_image)).execute(imageUrl);
-    }
-
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        public DownloadImageTask(ImageView bmImageIn) {
-            bmImage = bmImageIn;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
-        }
     }
 }

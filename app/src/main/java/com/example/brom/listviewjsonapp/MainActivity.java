@@ -1,7 +1,11 @@
 package com.example.brom.listviewjsonapp;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
+import android.provider.BaseColumns;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -32,6 +36,9 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private List<Game> games = new ArrayList<Game>();
+    SQLiteDatabase dbR;
+    SQLiteDatabase dbW;
+    MountainReaderDbHelper mDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,22 +52,24 @@ public class MainActivity extends AppCompatActivity {
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new CustomAdapter(games, new CustomAdapter.OnItemClickListener() {
+        mRecyclerView.setAdapter(new CustomAdapter(games, new CustomAdapter.OnItemClickListener() {
             @Override public void onItemClick(Game item) {
                 Intent intent = new Intent(getApplicationContext(), GameDetails.class);
 
-                String nameInfo = item.nameInfo();
-                String locationInfo = item.locationInfo();
-                String heightInfo = item.heightInfo();
-                intent.putExtra("Name", nameInfo);
-                intent.putExtra("Location", locationInfo);
-                intent.putExtra("Height", heightInfo);
-                intent.putExtra("Image", item.imageUrl());
+                String gameNameInfo = item.nameInfo();
+                String gameCompanyInfo = item.companyInfo();
+                String gameCategoryinfo = item.categoryInfo();
+                String gameDescInfo = item.gameDescInfo();
+                intent.putExtra("Name", gameNameInfo);
+                intent.putExtra("Company", gameCompanyInfo);
+                intent.putExtra("Category", gameCategoryinfo);
+                intent.putExtra("Desc", gameDescInfo);
                 startActivity(intent);
             }
-        });
-
+        }));
         mRecyclerView.setAdapter(mAdapter);
+        mDbHelper = new MountainReaderDbHelper(getApplicationContext());
+        Log.d("list",games.toString());
     }
 
     @Override
@@ -84,11 +93,14 @@ public class MainActivity extends AppCompatActivity {
                     @Override public void onItemClick(Game item) {
                         Intent intent = new Intent(getApplicationContext(), GameDetails.class);
 
-                        String nameInfo = item.nameInfo();
-                        String heightInfo = item.heightInfo();
-                        intent.putExtra("Name", nameInfo);
-                        intent.putExtra("Height", heightInfo);
-                        intent.putExtra("Image", item.imageUrl());
+                        String gameNameInfo = item.nameInfo();
+                        String gameCompanyInfo = item.companyInfo();
+                        String gameCategoryinfo = item.categoryInfo();
+                        String gameDescInfo = item.gameDescInfo();
+                        intent.putExtra("Name", gameNameInfo);
+                        intent.putExtra("Company", gameCompanyInfo);
+                        intent.putExtra("Category", gameCategoryinfo);
+                        intent.putExtra("Desc", gameDescInfo);
                         startActivity(intent);
                     }
                 }));
@@ -166,40 +178,86 @@ public class MainActivity extends AppCompatActivity {
 
             try {
                 JSONArray json1 = new JSONArray(o);
+                dbW = mDbHelper.getWritableDatabase();
                 mRecyclerView.setAdapter(null);
                 games.clear();
                 for(int i=0; i<json1.length();i++){
-                    JSONObject berg = json1.getJSONObject(i);
-                    String bergNamn = berg.getString("name");
-                    String bergComp = berg.getString("company");
-                    int bergId = berg.getInt("ID");
-                    String bergCategory = berg.getString("category");
-                    int bergSize = berg.getInt("size");
-                    //int bergCost = berg.getInt("cost");
-                    //JSONObject bergAux = new JSONObject(berg.getString("auxdata"));
-                    //String bergImg = bergAux.getString("img");
-                    //String bergUrl = bergAux.getString("url");
+                    JSONObject game = json1.getJSONObject(i);
+                    String gameNamn = game.getString("name");
+                    String gameCompany = game.getString("company");
+                    final String gameCategory = game.getString("category");
+                    int gameSize = game.getInt("size");
+                    //JSONObject gameAux = new JSONObject(game.getString("auxdata"));
+                    //String gameDesc = gameAux.getString("desc");
 
-                    Game m = new Game(bergNamn,bergId,bergComp,bergCategory,bergSize);
-                    games.add(m);
+                    ContentValues values = new ContentValues();
+                    values.put(MountainReaderContract.MountainEntry.COLUMN_NAME_NAME,gameNamn);
+                    values.put(MountainReaderContract.MountainEntry.COLUMN_NAME_COMPANY,gameCompany);
+                    values.put(MountainReaderContract.MountainEntry.COLUMN_NAME_CATEGORY,gameCategory);
+                    values.put(MountainReaderContract.MountainEntry.COLUMN_NAME_SIZE,gameSize);
+                    //values.put(MountainReaderContract.MountainEntry.COLUMN_NAME_DESC,gameDesc);
+
+                    dbW.insert(MountainReaderContract.MountainEntry.TABLE_NAME, null, values);
+
                     mRecyclerView.setAdapter(new CustomAdapter(games, new CustomAdapter.OnItemClickListener() {
                         @Override public void onItemClick(Game item) {
                             Intent intent = new Intent(getApplicationContext(), GameDetails.class);
 
-                            String nameInfo = item.nameInfo();
-                            String locationInfo = item.locationInfo();
-                            String heightInfo = item.heightInfo();
-                            intent.putExtra("Name", nameInfo);
-                            intent.putExtra("Location", locationInfo);
-                            intent.putExtra("Height", heightInfo);
-                            intent.putExtra("Image", item.imageUrl());
+                            String gameNameInfo = item.nameInfo();
+                            String gameCompanyInfo = item.companyInfo();
+                            String gameCategoryinfo = item.categoryInfo();
+                            String gameDescInfo = item.gameDescInfo();
+                            intent.putExtra("Name", gameNameInfo);
+                            intent.putExtra("Company", gameCompanyInfo);
+                            intent.putExtra("Category", gameCategoryinfo);
+                            intent.putExtra("Desc", gameDescInfo);
                             startActivity(intent);
                         }
                     }));
                 }
+                readDB();
             } catch (JSONException e) {
                 Log.e("a17pongo","E:"+e.getMessage());
             }
         }
+    }
+
+    public void readDB(){
+
+        dbR = mDbHelper.getReadableDatabase();
+
+        String[] projection = {
+                BaseColumns._ID,
+                MountainReaderContract.MountainEntry.COLUMN_NAME_NAME,
+                MountainReaderContract.MountainEntry.COLUMN_NAME_COMPANY,
+                MountainReaderContract.MountainEntry.COLUMN_NAME_CATEGORY,
+                MountainReaderContract.MountainEntry.COLUMN_NAME_SIZE,
+                //MountainReaderContract.MountainEntry.COLUMN_NAME_DESC
+        };
+
+        String sortOrder = MountainReaderContract.MountainEntry.COLUMN_NAME_NAME  + " DESC";
+
+        Cursor cursor = dbR.query(
+                MountainReaderContract.MountainEntry.TABLE_NAME,   // The table to query
+                projection,             // The array of columns to return (pass null to get all)
+                null,              // The columns for the WHERE clause
+                null,          // The values for the WHERE clause
+                null,                   // don't group the rows
+                null,                   // don't filter by row groups
+                sortOrder               // The sort order
+        );
+
+        while(cursor.moveToNext()) {
+            String gameNamn = cursor.getString(cursor.getColumnIndexOrThrow(MountainReaderContract.MountainEntry.COLUMN_NAME_NAME));
+            String gameCompany = cursor.getString(cursor.getColumnIndexOrThrow(MountainReaderContract.MountainEntry.COLUMN_NAME_COMPANY));
+            String gameCategory = cursor.getString(cursor.getColumnIndexOrThrow(MountainReaderContract.MountainEntry.COLUMN_NAME_CATEGORY));
+            int gameSize = cursor.getInt(cursor.getColumnIndexOrThrow(MountainReaderContract.MountainEntry.COLUMN_NAME_SIZE));
+            //String gameDesc = cursor.getString(cursor.getColumnIndexOrThrow(MountainReaderContract.MountainEntry.COLUMN_NAME_DESC));
+
+            Game gm = new Game(gameNamn,gameCompany,gameCategory,gameSize);
+            games.add(gm);
+            Log.d("db",gm.info());
+        }
+        cursor.close();
     }
 }

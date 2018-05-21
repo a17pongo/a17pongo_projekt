@@ -1,28 +1,19 @@
 package com.example.brom.listviewjsonapp;
 
 public class Game {
-    private int id;
     private String name;
-    //private String type;
     private String company;
-    private String location;
     private String category;
     private int size;
-    private int cost;
-    private String imgUrl;
-    private String infoUrl;
+    private String auxdata;
 
-    public Game(String inName,  int inId, String inCompany, String inCategory, int inSize){
-        id=inId;
+
+    public Game(String inName, String inCompany, String inCategory, int inSize){
         name=inName;
-        //type=inType;
         company=inCompany;
-        //location=inLocation;
         category=inCategory;
         size=inSize;
-        //cost=inCost;
-        //imgUrl=inImgurl;
-        //infoUrl=inInfoUrl;
+        //auxdata=inAuxdata;
     }
 
     @Override
@@ -34,7 +25,8 @@ public class Game {
 
     public String info(){
         String str= "Name: " + name;
-        str += "\n" + "Id: " + id;
+        str += "Company: " + company;
+
         return str;
     }
 
@@ -42,15 +34,19 @@ public class Game {
         return name;
     }
 
-    public String locationInfo() {
-        return location;
+    public String companyInfo() {
+        return company;
     }
 
-    public String heightInfo() {
+    public String categoryInfo() {
+        return category;
+    }
+
+    public String sizeInfo() {
         return "" + Integer.toString(size) + " GB";
     }
 
-    public String imageUrl() {
-        return imgUrl;
+    public String gameDescInfo() {
+        return auxdata;
     }
 }
